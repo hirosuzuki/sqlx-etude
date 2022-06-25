@@ -37,9 +37,14 @@ type User struct {
 
 type Comment struct {
 	Id     int       `db:"id"`
-	UserId string    `db:"user_id"`
+	UserId int       `db:"user_id"`
 	Body   string    `db:"body"`
 	PostAt time.Time `db:"post_at"`
+}
+
+type UserComment struct {
+	Comment
+	User
 }
 
 func etude2() {
@@ -64,6 +69,44 @@ func etude3() {
 	}
 }
 
+func etude4() {
+	var rows []*UserComment
+	err := dbx.Select(&rows, "SELECT c.*, u.* FROM comments c INNER JOIN users u ON u.id = c.user_id ORDER BY c.id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, row := range rows {
+		row.User.Id = row.Comment.UserId
+	}
+	for _, row := range rows {
+		fmt.Println(row)
+	}
+}
+
+func etude5() {
+	var comments []*Comment
+	err := dbx.Select(&comments, "SELECT * FROM comments ORDER BY id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	ids := make([]int, 0)
+	for _, comment := range comments {
+		ids = append(ids, comment.UserId)
+	}
+	query, params, err := sqlx.In("SELECT * FROM users WHERE id IN (?)", ids)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var users []*User
+	err = dbx.Select(&users, query, params...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, user := range users {
+		fmt.Println(user)
+	}
+}
+
 func main() {
 	var err error
 	dsn := "sqlxetude:sqlxetude@(127.0.0.1:23306)/sqlxetude?parseTime=true"
@@ -77,4 +120,6 @@ func main() {
 	etude1()
 	etude2()
 	etude3()
+	etude4()
+	etude5()
 }
