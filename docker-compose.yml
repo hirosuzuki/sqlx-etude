@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0.29
+    hostname: mysql
+    ports:
+      - "23306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      TZ: "Asia/Tokyo"
+    volumes:
+      - "./mysql-initdb.d:/docker-entrypoint-initdb.d"
+  
