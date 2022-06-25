@@ -35,6 +35,13 @@ type User struct {
 	Birthday time.Time `db:"birthday"`
 }
 
+type Comment struct {
+	Id     int       `db:"id"`
+	UserId string    `db:"user_id"`
+	Body   string    `db:"body"`
+	PostAt time.Time `db:"post_at"`
+}
+
 func etude2() {
 	var users []*User
 	err := dbx.Select(&users, "SELECT * FROM users ORDER BY id")
@@ -43,6 +50,17 @@ func etude2() {
 	}
 	for _, user := range users {
 		fmt.Println(user)
+	}
+}
+
+func etude3() {
+	var comments []*Comment
+	err := dbx.Select(&comments, "SELECT * FROM comments ORDER BY id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, comment := range comments {
+		fmt.Println(comment)
 	}
 }
 
@@ -58,4 +76,5 @@ func main() {
 
 	etude1()
 	etude2()
+	etude3()
 }

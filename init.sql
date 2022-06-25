@@ -19,7 +19,7 @@ CREATE TABLE users (
 DROP TABLE IF EXISTS comments;
 CREATE TABLE comments (
     id INT AUTO_INCREMENT,
-    users_id INT,
+    user_id INT,
     body VARCHAR(200),
     post_at DATETIME,
     PRIMARY KEY (id)
@@ -32,7 +32,7 @@ VALUES
 ,(3, "beatbeat", "2010-03-30 00:00:00")
 ;
 
-INSERT INTO comments (users_id, body, post_at)
+INSERT INTO comments (user_id, body, post_at)
 VALUES
  (1, "Great!",         "2022-06-22 12:20:05")
 ,(1, "Nice Nice Nice", "2022-06-22 14:03:33")
